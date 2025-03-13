@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "build:github": "NEXT_PUBLIC_BASE_PATH=/proj-web-toolbox next build",
+    "start": "npx serve@latest out --cors -s",
     "lint": "next lint",
     "export": "next build"
   },
