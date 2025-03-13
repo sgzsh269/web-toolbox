@@ -9,6 +9,7 @@ import "highlight.js/styles/github.css";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { FileDown, Copy } from "lucide-react";
+import type { Components } from "react-markdown";
 
 const initialMarkdown = `# Markdown Renderer
 
@@ -73,6 +74,47 @@ export default function MarkdownPage() {
     navigator.clipboard.writeText(markdown);
   };
 
+  // Define the component overrides
+  const markdownComponents: Components = {
+    h1: (props) => <h1 className="text-2xl font-bold my-4" {...props} />,
+    h2: (props) => <h2 className="text-xl font-bold my-3" {...props} />,
+    h3: (props) => <h3 className="text-lg font-bold my-2" {...props} />,
+    table: (props) => (
+      <table className="border-collapse table-auto w-full my-4" {...props} />
+    ),
+    th: (props) => <th className="border px-4 py-2 bg-muted" {...props} />,
+    td: (props) => <td className="border px-4 py-2" {...props} />,
+    a: (props) => <a className="text-primary hover:underline" {...props} />,
+    pre: (props) => (
+      <pre className="p-4 rounded bg-muted overflow-x-auto" {...props} />
+    ),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    code: ({ inline, className, children, ...props }: any) => {
+      if (inline) {
+        return (
+          <code className="bg-muted px-1 py-0.5 rounded text-sm" {...props}>
+            {children}
+          </code>
+        );
+      }
+      return (
+        <code className={className} {...props}>
+          {children}
+        </code>
+      );
+    },
+    ul: (props) => <ul className="list-disc pl-6 my-4" {...props} />,
+    ol: (props) => <ol className="list-decimal pl-6 my-4" {...props} />,
+    li: (props) => <li className="my-1" {...props} />,
+    blockquote: (props) => (
+      <blockquote
+        className="border-l-4 border-muted pl-4 italic my-4"
+        {...props}
+      />
+    ),
+    hr: (props) => <hr className="my-6 border-muted" {...props} />,
+  };
+
   return (
     <div className="flex flex-col gap-6">
       <div>
@@ -116,68 +158,7 @@ export default function MarkdownPage() {
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
               rehypePlugins={[rehypeSanitize, rehypeHighlight]}
-              components={{
-                // Override base components to add proper styling
-                h1: (props) => (
-                  <h1 className="text-2xl font-bold my-4" {...props} />
-                ),
-                h2: (props) => (
-                  <h2 className="text-xl font-bold my-3" {...props} />
-                ),
-                h3: (props) => (
-                  <h3 className="text-lg font-bold my-2" {...props} />
-                ),
-                table: (props) => (
-                  <table
-                    className="border-collapse table-auto w-full my-4"
-                    {...props}
-                  />
-                ),
-                th: (props) => (
-                  <th className="border px-4 py-2 bg-muted" {...props} />
-                ),
-                td: (props) => <td className="border px-4 py-2" {...props} />,
-                a: (props) => (
-                  <a className="text-primary hover:underline" {...props} />
-                ),
-                pre: (props) => (
-                  <pre
-                    className="p-4 rounded bg-muted overflow-x-auto"
-                    {...props}
-                  />
-                ),
-                code: ({ inline, className, children, ...props }) => {
-                  if (inline) {
-                    return (
-                      <code
-                        className="bg-muted px-1 py-0.5 rounded text-sm"
-                        {...props}
-                      >
-                        {children}
-                      </code>
-                    );
-                  }
-                  return (
-                    <code className={className} {...props}>
-                      {children}
-                    </code>
-                  );
-                },
-                ul: (props) => (
-                  <ul className="list-disc pl-6 my-4" {...props} />
-                ),
-                ol: (props) => (
-                  <ol className="list-decimal pl-6 my-4" {...props} />
-                ),
-                li: (props) => <li className="my-1" {...props} />,
-                blockquote: (props) => (
-                  <blockquote
-                    className="border-l-4 border-muted pl-4 italic my-4"
-                    {...props}
-                  />
-                ),
-                hr: (props) => <hr className="my-6 border-muted" {...props} />,
-              }}
+              components={markdownComponents}
             >
               {markdown}
             </ReactMarkdown>
