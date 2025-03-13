@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeHighlight from "rehype-highlight";
@@ -118,37 +118,35 @@ export default function MarkdownPage() {
               rehypePlugins={[rehypeSanitize, rehypeHighlight]}
               components={{
                 // Override base components to add proper styling
-                h1: ({ node, ...props }) => (
+                h1: (props) => (
                   <h1 className="text-2xl font-bold my-4" {...props} />
                 ),
-                h2: ({ node, ...props }) => (
+                h2: (props) => (
                   <h2 className="text-xl font-bold my-3" {...props} />
                 ),
-                h3: ({ node, ...props }) => (
+                h3: (props) => (
                   <h3 className="text-lg font-bold my-2" {...props} />
                 ),
-                table: ({ node, ...props }) => (
+                table: (props) => (
                   <table
                     className="border-collapse table-auto w-full my-4"
                     {...props}
                   />
                 ),
-                th: ({ node, ...props }) => (
+                th: (props) => (
                   <th className="border px-4 py-2 bg-muted" {...props} />
                 ),
-                td: ({ node, ...props }) => (
-                  <td className="border px-4 py-2" {...props} />
-                ),
-                a: ({ node, ...props }) => (
+                td: (props) => <td className="border px-4 py-2" {...props} />,
+                a: (props) => (
                   <a className="text-primary hover:underline" {...props} />
                 ),
-                pre: ({ node, ...props }) => (
+                pre: (props) => (
                   <pre
                     className="p-4 rounded bg-muted overflow-x-auto"
                     {...props}
                   />
                 ),
-                code: ({ node, inline, className, children, ...props }) => {
+                code: ({ inline, className, children, ...props }) => {
                   if (inline) {
                     return (
                       <code
@@ -165,22 +163,20 @@ export default function MarkdownPage() {
                     </code>
                   );
                 },
-                ul: ({ node, ordered, ...props }) => (
+                ul: (props) => (
                   <ul className="list-disc pl-6 my-4" {...props} />
                 ),
-                ol: ({ node, ordered, ...props }) => (
+                ol: (props) => (
                   <ol className="list-decimal pl-6 my-4" {...props} />
                 ),
-                li: ({ node, ...props }) => <li className="my-1" {...props} />,
-                blockquote: ({ node, ...props }) => (
+                li: (props) => <li className="my-1" {...props} />,
+                blockquote: (props) => (
                   <blockquote
                     className="border-l-4 border-muted pl-4 italic my-4"
                     {...props}
                   />
                 ),
-                hr: ({ node, ...props }) => (
-                  <hr className="my-6 border-muted" {...props} />
-                ),
+                hr: (props) => <hr className="my-6 border-muted" {...props} />,
               }}
             >
               {markdown}
